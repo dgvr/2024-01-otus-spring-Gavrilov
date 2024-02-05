@@ -5,9 +5,8 @@ import java.io.PrintStream;
 public class StreamsIOService implements IOService {
     private final PrintStream printStream;
 
-    public StreamsIOService(PrintStream printStream) {
-
-        this.printStream = printStream;
+    public StreamsIOService() {
+        this.printStream = System.out;
     }
 
     @Override
