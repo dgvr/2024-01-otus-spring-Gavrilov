@@ -5,6 +5,7 @@ import ru.otus.hw.dao.QuestionDao;
 import ru.otus.hw.domain.Answer;
 import ru.otus.hw.domain.Question;
 
+import java.util.Collection;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -20,19 +21,27 @@ public class TestServiceImpl implements TestService {
         ioService.printFormattedLine("Please answer the questions below%n");
 
         List<Question> questions = questionDao.findAll();
-        int[] questionsCounter = new int[1];
-        questions.forEach(question -> {
-            String qCounter = ++questionsCounter[0] + ". ";
-            ioService.printFormattedLine(qCounter + question.text() + "%n");
-            List<Answer> answers = question.answers();
-            if (answers != null) {
-                int[] answerCounter = new int[1];
-                answers.forEach(answer -> {
-                    String aCounter = ++answerCounter[0] + ") ";
-                    ioService.printLine(aCounter + answer.text());
-                });
-            }
+        printQuestions(questions);
+    }
+
+    private void printQuestions(Collection<Question> questions) {
+        int questionsCounter = 0;
+        for (Question question : questions) {
+            printQuestion(++questionsCounter, question);
+            printAnswers(question.answers());
             ioService.printFormattedLine("%n");
-        });
+        }
+    }
+
+    private void printQuestion(int counter, Question question) {
+        ioService.printFormattedLine(counter + ". " + question.text() + "%n");
+    }
+
+    private void printAnswers(Collection<Answer> answers) {
+        int answerCounter = 0;
+        for (Answer answer : answers) {
+            String aCounter = ++answerCounter + ") ";
+            ioService.printLine(aCounter + answer.text());
+        }
     }
 }
