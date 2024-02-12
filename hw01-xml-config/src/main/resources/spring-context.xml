@@ -7,9 +7,27 @@
         http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
 
     <bean id="ioService" class="ru.otus.hw.service.StreamsIOService">
-        <constructor-arg index="0">
-            <util:constant static-field="java.lang.System.out"/>
-        </constructor-arg>
+<!--        FIXME почему то в таком варианте не работает способ запуска через  java -jar-->
+<!--        <constructor-arg index="0">-->
+<!--            <util:constant static-field="java.lang.System.out"/>-->
+<!--        </constructor-arg>-->
+    </bean>
+
+    <bean id="questionDao" class="ru.otus.hw.dao.CsvQuestionDao">
+        <constructor-arg index="0" ref="appProperties"/>
+    </bean>
+
+    <bean id="testService" class="ru.otus.hw.service.TestServiceImpl">
+        <constructor-arg index="0" ref="ioService"/>
+        <constructor-arg index="1" ref="questionDao"/>
+    </bean>
+
+    <bean id = "testRunner" class="ru.otus.hw.service.TestRunnerServiceImpl">
+        <constructor-arg index="0" ref = "testService"/>
+    </bean>
+
+    <bean id="appProperties" class="ru.otus.hw.config.AppProperties">
+        <constructor-arg index="0" value="questions.csv"/>
     </bean>
 
 </beans>
