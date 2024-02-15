@@ -1,6 +1,7 @@
 package ru.otus.hw;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import ru.otus.hw.config.AppConfig;
 import ru.otus.hw.service.TestRunnerService;
 
 

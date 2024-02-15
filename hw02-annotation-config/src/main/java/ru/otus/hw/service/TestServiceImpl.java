@@ -8,7 +8,7 @@ import ru.otus.hw.domain.Question;
 import ru.otus.hw.domain.Student;
 import ru.otus.hw.domain.TestResult;
 
-import java.util.Collection;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -25,9 +25,9 @@ public class TestServiceImpl implements TestService {
         var questions = questionDao.findAll();
         var testResult = new TestResult(student);
 
-        int questionsCounter = 0;
-        for (var question : questions) {
-            printQuestion(++questionsCounter, question);
+        for (int i = 1; i <= questions.size(); i++) {
+            Question question = questions.get(i - 1);
+            printQuestion(i, question);
             int correctAnswer = processAnswers(question.answers());
             int userAnswer = getUserAnswer(question.answers().size());
             var isAnswerValid = correctAnswer == userAnswer;
@@ -40,39 +40,23 @@ public class TestServiceImpl implements TestService {
         ioService.printFormattedLine(counter + ". " + question.text() + "%n");
     }
 
-    private int processAnswers(Collection<Answer> answers) {
+    private int processAnswers(List<Answer> answers) {
         int correctAnswer = 0;
-        int answerCounter = 0;
-        for (Answer answer : answers) {
-            String aCounter = ++answerCounter + ") ";
+        for (int i = 1; i <= answers.size(); i++) {
+            String aCounter = i + ") ";
+            Answer answer = answers.get(i - 1);
             ioService.printLine(aCounter + answer.text());
             if (answer.isCorrect()) {
-                correctAnswer = answerCounter;
+                correctAnswer = i;
             }
         }
         return correctAnswer;
     }
 
     private int getUserAnswer(int answersCount) {
-        int result = -1;
-        String userAnswer = ioService.readStringWithPrompt("Choose the correct answer");
-        while (result == -1) {
-            try {
-                int tempResult = Integer.parseInt(userAnswer);
-                if (!isCorrectAnswerPosition(tempResult, 0, answersCount)) {
-                    userAnswer = ioService.readStringWithPrompt(
-                            "There is no such option! Choose the correct answer again");
-                    continue;
-                }
-                result = tempResult;
-            } catch (NumberFormatException e) {
-                userAnswer = ioService.readStringWithPrompt("Incorrect attempt! Choose the correct answer again");
-            }
-        }
-        return result;
-    }
-
-    private boolean isCorrectAnswerPosition(int answer, int minBorder, int maxBorder) {
-        return answer >= minBorder && answer <= maxBorder;
+        return ioService.readIntForRangeWithPrompt(0,
+                answersCount,
+                "Choose the correct answer",
+                "There is no such option! Choose the correct answer again");
     }
 }
