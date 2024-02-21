@@ -7,6 +7,7 @@ import ru.otus.hw.domain.Answer;
 import ru.otus.hw.domain.Question;
 import ru.otus.hw.domain.Student;
 import ru.otus.hw.domain.TestResult;
+import ru.otus.hw.logging.Loggable;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class TestServiceImpl implements TestService {
     private final QuestionDao questionDao;
 
     @Override
+    @Loggable
     public TestResult executeTestFor(Student student) {
         ioService.printLine("");
         ioService.printLineLocalized("TestService.answer.the.questions");
