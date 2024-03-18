@@ -8,7 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.otus.hw.models.Book;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.springframework.data.jpa.repository.EntityGraph.EntityGraphType.FETCH;
@@ -23,10 +25,9 @@ public class BookRepositoryJpa implements BookRepository {
     @Override
     public Optional<Book> findById(long id) {
         EntityGraph<?> entityGraph = em.getEntityGraph("author-entity-graph");
-        TypedQuery<Book> query = em.createQuery("select b from Book b where b.id = :id", Book.class);
-        query.setParameter("id", id);
-        query.setHint(FETCH.getKey(), entityGraph);
-        return Optional.ofNullable(query.getSingleResult());
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(FETCH.getKey(), entityGraph);
+        return Optional.ofNullable(em.find(Book.class, id, properties));
     }
 
     @Override
