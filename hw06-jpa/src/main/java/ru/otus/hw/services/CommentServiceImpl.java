@@ -29,6 +29,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<CommentDto> findById(long id) {
         Optional<Comment> commentOptional = commentRepository.findById(id);
         if (commentOptional.isPresent()) {
