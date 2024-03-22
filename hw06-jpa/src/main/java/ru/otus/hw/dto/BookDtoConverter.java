@@ -24,13 +24,6 @@ public class BookDtoConverter {
 
             });
         }
-        if (book.getComments() != null) {
-            List<CommentDto> commentDtoList = new ArrayList<>(book.getComments().size());
-            bookDto.setComments(commentDtoList);
-            book.getComments().forEach(comment -> {
-                commentDtoList.add(new CommentDto(comment.getId(), comment.getText()));
-            });
-        }
         return bookDto;
     }
 }

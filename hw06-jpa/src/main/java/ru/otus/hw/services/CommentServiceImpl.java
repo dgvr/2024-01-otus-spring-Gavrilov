@@ -31,12 +31,8 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional(readOnly = true)
     public Optional<CommentDto> findById(long id) {
-        Optional<Comment> commentOptional = commentRepository.findById(id);
-        if (commentOptional.isPresent()) {
-            Comment comment = commentOptional.get();
-            return Optional.of(CommentDtoConverter.toDto(comment));
-        }
-        return Optional.empty();
+        return commentRepository.findById(id)
+                .map(CommentDtoConverter::toDto);
     }
 
     @Override
