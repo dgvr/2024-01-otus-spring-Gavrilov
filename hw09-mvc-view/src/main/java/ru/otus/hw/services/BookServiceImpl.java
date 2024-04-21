@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.dto.BookDtoConverter;
+import ru.otus.hw.dto.GenreDto;
 import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.repositories.AuthorRepository;
@@ -15,6 +16,7 @@ import ru.otus.hw.repositories.GenreRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.springframework.util.CollectionUtils.isEmpty;
 
@@ -53,6 +55,13 @@ public class BookServiceImpl implements BookService {
     @Transactional
     public BookDto update(long id, String title, long authorId, Set<Long> genresIds) {
         return BookDtoConverter.toDto(save(id, title, authorId, genresIds));
+    }
+
+    @Override
+    @Transactional
+    public BookDto update(BookDto bookDto) {
+        Set<Long> genreIds = bookDto.getGenres().stream().map(GenreDto::getId).collect(Collectors.toSet());
+        return BookDtoConverter.toDto(save(bookDto.getId(), bookDto.getTitle(), bookDto.getAuthor().getId(), genreIds));
     }
 
     @Override
