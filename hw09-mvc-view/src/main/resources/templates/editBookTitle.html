@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Title</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<form id="edit-book-title-form" action="editBookTitle.html" th:method="post" th:action="@{/book/edit/title/{id}(id=${book.id})}" th:object="${book}">
+    <div class="row">
+        <label for="book-title-input">Title:</label>
+        <input id="book-title-input" name="title" type="text" value="Title1" th:value="*{title}"/>
+    </div>
+
+
+    <div class="row">
+        <button type="submit">Save</button>
+        <a href="bookAbout.html" th:href="@{/book/about/{bookId}(bookId=${book.id})}"><button type="button">Cancel</button></a>
+    </div>
+</form>
+
+</body>
+</html>

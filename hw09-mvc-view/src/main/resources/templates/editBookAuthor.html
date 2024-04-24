@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Author</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<form id="edit-book-author-form" action="editBookAuthor.html" th:method="post" th:action="@{/book/edit/author(bookId=${bookId})}">
+<!--    Name: <input type="text" name="name"><br> /> Price: <input type="text" name="bookId"><br />-->
+    <div class="row">
+        <label for="book-author-input">Author:</label>
+        <select id="book-author-input" name="authorId">
+            <option th:each="item : ${authors}" th:value="${item.id}" th:text="${item.fullName}" th:selected="${item.id == authorId}"></option>
+        </select>
+    </div>
+
+    <div class="row">
+        <button type="submit">Save</button>
+        <a href="bookAbout.html" th:href="@{/book/about/{bookId}(bookId=${bookId})}"><button type="button">Cancel</button></a>
+    </div>
+</form>
+</body>
+</html>
