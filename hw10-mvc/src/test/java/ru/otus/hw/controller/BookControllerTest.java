@@ -41,8 +41,7 @@ class BookControllerTest {
     void listBook() throws Exception {
         mvc.perform(get("/"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("bookList"))
-                .andExpect(model().attribute("books", hasSize(0)));
+                .andExpect(view().name("bookList"));
     }
 
     @Test
@@ -71,8 +70,7 @@ class BookControllerTest {
         BookDto bookDto = createEmptyBookDto();
         bookDto.setAuthor(new AuthorDto(1, "name"));
         given(bookService.findById(anyLong())).willReturn(Optional.of(bookDto));
-        mvc.perform(get("/book/edit/author")
-                        .param("bookId", "1"))
+        mvc.perform(get("/book/{id}/edit/author", 1))
                 .andExpect(status().isOk())
                 .andExpect(view().name("editBookAuthor"))
                 .andExpect(model().attribute("authors", hasSize(0)));
@@ -84,8 +82,8 @@ class BookControllerTest {
         given(bookService.findById(anyLong())).willReturn(Optional.of(bookDto));
         given(authorService.findById(anyLong())).willReturn(Optional.of(new AuthorDto(1, "authorName")));
 
-        mvc.perform(post("/book/edit/author")
-                        .param("authorId", "1").param("bookId", "1"))
+        mvc.perform(post("/book/{id}/edit/author", 1)
+                        .param("authorId", "1"))
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl("/book/about/1"));
     }
@@ -95,8 +93,7 @@ class BookControllerTest {
         BookDto bookDto = createEmptyBookDto();
         bookDto.setAuthor(new AuthorDto(1, "name"));
         given(bookService.findById(anyLong())).willReturn(Optional.of(bookDto));
-        mvc.perform(get("/book/edit/genre")
-                        .param("bookId", "1"))
+        mvc.perform(get("/book/{id}/edit/genre", 1))
                 .andExpect(status().isOk())
                 .andExpect(view().name("editBookGenre"))
                 .andExpect(model().attribute("genres", hasSize(0)));
@@ -107,21 +104,22 @@ class BookControllerTest {
         BookDto bookDto = createEmptyBookDto();
         given(bookService.findById(anyLong())).willReturn(Optional.of(bookDto));
 
-        mvc.perform(post("/book/edit/genre")
-                        .param("bookId", "1").param("genreIds", "1", "2", "3"))
+        mvc.perform(post("/book/{id}/edit/genre", 1)
+                        .param("genreIds", "1", "2", "3"))
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrl("/book/about/1"));
     }
 
     @Test
     void bookAbout() throws Exception {
+        long bookId = 1L;
         BookDto bookDto = createEmptyBookDto();
         bookDto.setAuthor(new AuthorDto(1, "authorName"));
         given(bookService.findById(anyLong())).willReturn(Optional.of(bookDto));
-        mvc.perform(get("/book/about/{id}", 1))
+        mvc.perform(get("/book/about/{id}", bookId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("bookAbout"))
-                .andExpect(model().attribute("book", is(bookDto)))
+                .andExpect(model().attribute("bookId", is(bookId)))
                 .andExpect(model().attribute("mode", "about"));
     }
 

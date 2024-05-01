@@ -39,51 +39,74 @@
 </head>
 <body>
 
-<form id="about-form" action="bookAbout.html" th:method="post" th:action="@{/book/edit/all/{id}(id=*{id})}" th:object="${book}">
+<form id="about-form" action="bookAbout.html" th:method="post" th:action="@{/book/edit/all/{id}(id=${bookId})}">
     <h3>Book info:</h3>
 
     <div class="row">
         <label for="id-input">ID:</label>
-        <input id="id-input" type="text" readonly="readonly" value="1" th:value="*{id}"/>
+        <input id="id-input" type="text" readonly="readonly" th:value="${bookId}"/>
     </div>
 
     <div class="row">
         <label for="title-input">Title:</label>
-        <input id="title-input" type="text" readonly="readonly" value="Title" th:value="*{title}"/>
-        <a th:if="'about' == ${mode}" href="editBookTitle.html" th:href="@{/book/edit/title/{id}(id=*{id})}">Edit</a>
+        <input id="title-input" type="text" readonly="readonly"/>
+        <a th:if="'about' == ${mode}" href="editBookTitle.html" th:href="@{/book/edit/title/{id}(id=${bookId})}">Edit</a>
     </div>
 
 
     <div class="row">
         <label for="author-input">Author:</label>
-        <input id="author-input" type="text" readonly="readonly" value="Author" th:value="*{author.fullName}"/>
-        <a th:if="'about' == ${mode}" href="editBookAuthor.html" th:href="@{/book/edit/author(bookId=*{id})}">Edit</a>
+        <input id="author-input" type="text" readonly="readonly"/>
+        <a th:if="'about' == ${mode}" href="editBookAuthor.html" th:href="@{/book/{id}/edit/author(id=${bookId})}">Edit</a>
     </div>
 
+
     <div class="row">
-        <table class="genres">
+
+        <table id="genres" class="genres">
             <thead>
             <tr>
-                <th>Genres</th>
+                <th>Genre name</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="genre : *{genres}">
-                <td th:text="${genre.name}">Genre name</td>
-            </tr>
-            </tbody>
         </table>
-        <a th:if="'about' == ${mode}" href="editBookGenre.html" th:href="@{/book/edit/genre(bookId=*{id})}"><button type="button">Edit Genres</button></a>
+        <a th:if="'about' == ${mode}" href="editBookGenre.html" th:href="@{/book/{id}/edit/genre(id=${bookId})}"><button type="button">Edit Genres</button></a>
     </div>
 
     <div class="row">
         <form method="POST" th:action="@{/book/delete/{id}(id=*{id})}">
-            <button th:if="'about' == ${mode}" type="submit" name="action" value="delete">Delete</button>
+            <button th:if="'about' == ${mode}" type="submit">Delete</button>
         </form>
         <a href="bookList.html" th:href="@{/}"><button type="button">Cancel</button></a>
     </div>
 
 </form>
+
+
+<script>
+    function loadData(url, id, title, author, genres) {
+        fetch(url + id.value)
+            .then(response => response.json())
+            .then(json => {
+                title.value = json.title;
+                author.value = json.author.fullName;
+
+                for (const genreRow of json.genres) {
+
+                    let tableRow = `
+                    <tr>
+                        <td>${genreRow.name}</td>
+                    </tr>
+                    `
+                    genres.innerHTML += tableRow;
+                }
+            });
+    }
+<!--    TODO как здесь задавать нужный id???-->
+    loadData('/api/book/', document.querySelector("#id-input"), document.querySelector("#title-input"),
+    document.querySelector("#author-input"), document.querySelector("#genres"))
+</script>
 
 </body>
 </html>

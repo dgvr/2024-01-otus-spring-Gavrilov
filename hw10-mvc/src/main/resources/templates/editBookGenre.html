@@ -20,7 +20,7 @@
 </head>
 <body>
 
-<form id="edit-book-genre-form" action="editBookGenre.html" th:method="post" th:action="@{/book/edit/genre(bookId=${bookId})}">
+<form id="edit-book-genre-form" action="editBookGenre.html" th:method="post" th:action="@{/book/{id}/edit/genre(id=${bookId})}">
     <div class="row">
         <ul>
             <li th:each="item : ${genres}">

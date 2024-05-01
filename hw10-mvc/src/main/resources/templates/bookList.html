@@ -26,7 +26,7 @@
 </head>
 <body>
 <h3>Books:</h3>
-<table class="books">
+<table id="books" class="books">
     <thead>
     <tr>
         <th>ID</th>
@@ -36,17 +36,32 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="book : ${books}">
-        <td th:text="${book.id}">1</td>
-        <td th:text="${book.title}">Book title</td>
-        <td th:text="${book.author.fullName}">Book title</td>
-        <td>
-            <a href="bookAbout.html" th:href="@{/book/about/{bookId}(bookId=${book.id})}">About</a>
-        </td>
-    </tr>
-
-    </tbody>
 </table>
+
 <a href="bookAbout.html" th:href="@{/book/create}"><button type="button">Create book</button></a>
+
+<script>
+     function loadIntoTable(url, table) {
+        fetch(url)
+            .then(response => response.json())
+            .then(json => {
+                for (const row of json) {
+
+                    let tableRow = `
+                        <tr>
+                            <td>${row.id}</td>
+                            <td>${row.title}</td>
+                            <td>${row.author.fullName}</td>
+                            <td><a href="/book/about/${row.id}">About</a></td>
+                        </tr>
+                    `
+                    table.innerHTML += tableRow;
+                }
+            });
+    }
+
+    loadIntoTable('/api/books', document.querySelector("#books"))
+</script>
+
 </body>
 </html>

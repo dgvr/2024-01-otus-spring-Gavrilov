@@ -20,7 +20,7 @@
 </head>
 <body>
 
-<form id="edit-book-author-form" action="editBookAuthor.html" th:method="post" th:action="@{/book/edit/author(bookId=${bookId})}">
+<form id="edit-book-author-form" action="editBookAuthor.html" th:method="post" th:action="@{/book/{id}/edit/author(id=${bookId})}">
 <!--    Name: <input type="text" name="name"><br> /> Price: <input type="text" name="bookId"><br />-->
     <div class="row">
         <label for="book-author-input">Author:</label>

@@ -54,19 +54,50 @@
     <div class="row">
         <ul>
             <li th:each="item : ${genres}">
-                <input type="checkbox" name="genreIds" th:value="${item.id}" th:text="${item.name}"/>
+                <input type="checkbox" id="genreId" name="genreIds" th:value="${item.id}" th:text="${item.name}"/>
             </li>
         </ul>
     </div>
 
 
     <div class="row">
-        <button type="submit">Save</button>
+        <button type="button" onclick="saveBook()">Save</button>
         <a href="bookList.html" th:href="@{/}">
             <button type="button">Cancel</button>
         </a>
     </div>
 
 </form>
+
+
+
+<script>
+    function saveBook() {
+        const bookTitle = document.getElementById("title-input")
+        const authorId = document.getElementById("book-author-input")
+        const genreIds = []
+
+        document.getElementsByName('genreIds').forEach((el) => {
+            if (el.checked) {
+                genreIds.push(el.value)
+            }
+        })
+
+        const book = {title: bookTitle.value, author: authorId.value, genres: genreIds}
+
+        fetch('/api/book', {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(book)
+        }).then(function() {
+            window.location.replace("/")
+        })
+    }
+
+</script>
+
 </body>
 </html>

@@ -31,12 +31,9 @@ public class BookController {
     private final GenreService genreService;
 
     @GetMapping("/")
-    public String listBook(Model model) {
-        List<BookDto> books = bookService.findAll();
-        model.addAttribute("books", books);
+    public String listBook() {
         return "bookList";
     }
-
 
     @GetMapping("/book/edit/title/{id}")
     public String editBookTitle(@PathVariable(value = "id") long id, Model model) {
@@ -51,64 +48,50 @@ public class BookController {
             @PathVariable(value = "id") long id,
             @RequestParam String title
     ) {
-        BookDto bookDto = bookService.findById(id)
-                .orElseThrow(EntityNotFoundException::new);
-        bookDto.setTitle(title);
-        bookService.update(bookDto);
+        bookService.updateTitle(id, title);
         return "redirect:/book/about/{id}";
     }
 
-    @GetMapping(value = "/book/edit/author")
-    public String editBookAuthor(@RequestParam("bookId") long bookId, Model model) {
-        BookDto book = bookService.findById(bookId)
+    @GetMapping(value = "/book/{id}/edit/author")
+    public String editBookAuthor(@PathVariable(value = "id") long id, Model model) {
+        BookDto book = bookService.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
-        model.addAttribute("bookId", bookId);
+        model.addAttribute("bookId", id);
         model.addAttribute("authorId", book.getAuthor().getId());
         List<AuthorDto> authorsDto = authorService.findAll();
         model.addAttribute("authors", authorsDto);
         return "editBookAuthor";
     }
 
-    @PostMapping(value = "/book/edit/author")
+    @PostMapping(value = "/book/{id}/edit/author")
     public String updateAuthor(
-            @RequestParam long bookId,
+            @PathVariable(value = "id") long id,
             @RequestParam long authorId
     ) {
-        BookDto bookDto = bookService.findById(bookId)
-                .orElseThrow(EntityNotFoundException::new);
-        AuthorDto authorDto = authorService.findById(authorId)
-                .orElseThrow(EntityNotFoundException::new);
-        bookDto.setAuthor(authorDto);
-        bookService.update(bookDto);
-        return "redirect:/book/about/" + bookId;
+        bookService.updateAuthor(id, authorId);
+        return "redirect:/book/about/" + id;
     }
 
-    @GetMapping("/book/edit/genre")
-    public String editBookGenre(@RequestParam("bookId") long bookId, Model model) {
-        model.addAttribute("bookId", bookId);
+    @GetMapping("/book/{id}/edit/genre")
+    public String editBookGenre(@PathVariable(value = "id") long id, Model model) {
+        model.addAttribute("bookId", id);
         List<GenreDto> genresDto = genreService.findAll();
         model.addAttribute("genres", genresDto);
         return "editBookGenre";
     }
 
-    @PostMapping("/book/edit/genre")
+    @PostMapping("/book/{id}/edit/genre")
     public String updateGenre(
-            @RequestParam long bookId,
+            @PathVariable(value = "id") long id,
             @RequestParam(required = false) List<Long> genreIds
     ) {
-        BookDto bookDto = bookService.findById(bookId)
-                .orElseThrow(EntityNotFoundException::new);
-        List<GenreDto> genreDtos = genreService.findByIdIn(genreIds);
-        bookDto.setGenres(genreDtos);
-        bookService.update(bookDto);
-        return "redirect:/book/about/" + bookId;
+        bookService.updateGenre(id, genreIds);
+        return "redirect:/book/about/" + id;
     }
 
     @GetMapping("/book/about/{id}")
     public String bookAbout(@PathVariable(value = "id") long id, Model model) {
-        BookDto book = bookService.findById(id)
-                .orElseThrow(EntityNotFoundException::new);
-        model.addAttribute("book", book);
+        model.addAttribute("bookId", id);
         model.addAttribute("mode", "about");
         return "bookAbout";
     }
@@ -132,7 +115,7 @@ public class BookController {
         return "redirect:/";
     }
 
-    @PostMapping(value = "/book/edit/all/{id}", params = "action=delete")
+    @PostMapping(value = "/book/edit/all/{id}")
     public String deleteBook(@PathVariable(value = "id") long id) {
         bookService.deleteById(id);
         return "redirect:/";

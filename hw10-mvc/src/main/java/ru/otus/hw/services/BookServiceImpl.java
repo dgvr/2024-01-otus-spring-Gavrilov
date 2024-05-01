@@ -3,6 +3,7 @@ package ru.otus.hw.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.otus.hw.dto.AuthorDto;
 import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.dto.BookDtoConverter;
 import ru.otus.hw.dto.GenreDto;
@@ -13,6 +14,7 @@ import ru.otus.hw.repositories.BookRepository;
 import ru.otus.hw.repositories.CommentRepository;
 import ru.otus.hw.repositories.GenreRepository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -30,6 +32,10 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
 
     private final CommentRepository commentRepository;
+
+    private final AuthorService authorService;
+
+    private final GenreService genreService;
 
     @Override
     @Transactional(readOnly = true)
@@ -68,6 +74,37 @@ public class BookServiceImpl implements BookService {
     @Transactional
     public void deleteById(long id) {
         bookRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public void updateTitle(long id, String title) {
+        BookDto bookDto = findById(id)
+                .orElseThrow(jakarta.persistence.EntityNotFoundException::new);
+        bookDto.setTitle(title);
+        update(bookDto);
+    }
+
+    @Override
+    @Transactional
+    public void updateAuthor(long id, long authorId) {
+        BookDto bookDto = findById(id)
+                .orElseThrow(jakarta.persistence.EntityNotFoundException::new);
+        AuthorDto authorDto = authorService.findById(authorId)
+                .orElseThrow(jakarta.persistence.EntityNotFoundException::new);
+        bookDto.setAuthor(authorDto);
+        update(bookDto);
+    }
+
+    @Override
+    @Transactional
+    public void updateGenre(long id, Collection<Long> genreIds) {
+        BookDto bookDto = findById(id)
+                .orElseThrow(jakarta.persistence.EntityNotFoundException::new);
+        List<GenreDto> genreDtos = genreService.findByIdIn(genreIds);
+        bookDto.setGenres(genreDtos);
+        update(bookDto);
+
     }
 
     private Book save(long id, String title, long authorId, Set<Long> genresIds) {
