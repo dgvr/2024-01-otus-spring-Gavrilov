@@ -31,7 +31,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<BookDto> findById(long id) {
+    public Optional<BookDto> findById(String id) {
         return bookRepository.findById(id)
                 .map(BookDtoConverter::toDto);
     }
@@ -45,36 +45,35 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public BookDto insert(String title, long authorId, Set<Long> genresIds) {
-        return BookDtoConverter.toDto(save(0, title, authorId, genresIds));
+    public BookDto insert(String title, String authorId, Set<String> genresIds) {
+        return BookDtoConverter.toDto(save(null, title, authorId, genresIds));
     }
 
     @Override
     @Transactional
-    public BookDto update(long id, String title, long authorId, Set<Long> genresIds) {
+    public BookDto update(String id, String title, String authorId, Set<String> genresIds) {
         return BookDtoConverter.toDto(save(id, title, authorId, genresIds));
     }
 
     @Override
     @Transactional
-    public void deleteById(long id) {
+    public void deleteById(String id) {
         bookRepository.deleteById(id);
     }
 
-    private Book save(long id, String title, long authorId, Set<Long> genresIds) {
+    private Book save(String id, String title, String authorId, Set<String> genresIds) {
         if (isEmpty(genresIds)) {
             throw new IllegalArgumentException("Genres ids must not be null");
         }
 
         var author = authorRepository.findById(authorId)
-                .orElseThrow(() -> new EntityNotFoundException("Author with id %d not found".formatted(authorId)));
+                .orElseThrow(() -> new EntityNotFoundException("Author with id %s not found".formatted(authorId)));
         var genres = genreRepository.findByIdIn(genresIds);
         if (isEmpty(genres) || genresIds.size() != genres.size()) {
             throw new EntityNotFoundException("One or all genres with ids %s not found".formatted(genresIds));
         }
 
-        var comments = commentRepository.findByBookId(id);
-        var book = new Book(id, title, author, genres, comments);
+        var book = new Book(id, title, author, genres);
         return bookRepository.save(book);
     }
 }

@@ -1,15 +1,15 @@
 spring:
-  datasource:
-    url: jdbc:h2:mem:maindb
-  sql:
-    init:
-      mode: always
-      data-locations: data.sql
-      schema-locations: schema.sql
+  data:
+    mongodb:
+      port: 27017
+      database: library
 
-  jpa:
-    generate-ddl: false
-    hibernate:
-      ddl-auto: none
 
-    show-sql: true
+mongock:
+  runner-type: "InitializingBean"
+  change-logs-scan-package:
+    - ru.otus.hw.mongock.changelog
+  mongo-db:
+    write-concern:
+      journal: false
+    read-concern: local

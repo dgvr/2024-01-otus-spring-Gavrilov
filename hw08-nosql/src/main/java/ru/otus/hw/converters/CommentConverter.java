@@ -7,6 +7,6 @@ import ru.otus.hw.dto.CommentDto;
 public class CommentConverter {
 
     public String commentToString(CommentDto comment) {
-        return "Id: %d, Text: %s".formatted(comment.getId(), comment.getText());
+        return "Id: %s, Text: %s".formatted(comment.getId(), comment.getText());
     }
 }
