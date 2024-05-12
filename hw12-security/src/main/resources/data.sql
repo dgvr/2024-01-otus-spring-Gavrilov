@@ -16,4 +16,8 @@ values (1, 1),   (1, 2),
 insert into comments(s_text, book_id)
 values ('Comment1', 1), ('Comment2', 1),
        ('Comment3', 2), ('Comment4', 2),
-       ('Comment5', 3), ('Comment6', 3)
+       ('Comment5', 3), ('Comment6', 3);
+
+insert into users(username, password)
+--values ('us', 'pass');
+values ('us', '$2a$12$Eztu3Nl7UHEWf.ELwxCopee6VM3zWLCwN18Cf3SDJ8xURIr4WWOam');

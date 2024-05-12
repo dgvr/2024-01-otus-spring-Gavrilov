@@ -10,6 +10,15 @@ create table genres (
     primary key (id)
 );
 
+
+create table users (
+
+    id bigserial,
+    username varchar(255),
+    password varchar(255),
+    primary key (id)
+);
+
 create table books (
     id bigserial,
     title varchar(255),
