@@ -25,6 +25,8 @@ public class SecurityConfiguration {
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers("/book/create").hasAuthority("ADMIN_ROLE")
+                        .requestMatchers("/book/edit/all/{id}").hasAuthority("ADMIN_ROLE")
                         .anyRequest().authenticated()
                 )
                 .formLogin(Customizer.withDefaults());

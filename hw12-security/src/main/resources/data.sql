@@ -18,6 +18,11 @@ values ('Comment1', 1), ('Comment2', 1),
        ('Comment3', 2), ('Comment4', 2),
        ('Comment5', 3), ('Comment6', 3);
 
-insert into users(username, password)
---values ('us', 'pass');
-values ('us', '$2a$12$Eztu3Nl7UHEWf.ELwxCopee6VM3zWLCwN18Cf3SDJ8xURIr4WWOam');
+insert into users(username, password, enabled)
+--values ('us', 'pass', true);
+values ('us', '$2a$12$Eztu3Nl7UHEWf.ELwxCopee6VM3zWLCwN18Cf3SDJ8xURIr4WWOam', true),
+       ('admin', '$2a$12$Eztu3Nl7UHEWf.ELwxCopee6VM3zWLCwN18Cf3SDJ8xURIr4WWOam', true);
+
+insert into authorities(username, authority)
+values('us', 'USER_ROLE'),
+      ('admin', 'ADMIN_ROLE');

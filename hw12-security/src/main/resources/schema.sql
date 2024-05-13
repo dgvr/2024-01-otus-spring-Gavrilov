@@ -10,15 +10,6 @@ create table genres (
     primary key (id)
 );
 
-
-create table users (
-
-    id bigserial,
-    username varchar(255),
-    password varchar(255),
-    primary key (id)
-);
-
 create table books (
     id bigserial,
     title varchar(255),
@@ -37,4 +28,19 @@ create table comments (
     s_text varchar(1000),
     book_id bigint references books (id) on delete cascade,
     primary key (id)
+);
+
+create table users(
+    id bigserial,
+	username varchar(50) not null,
+	password varchar(500) not null,
+	enabled boolean not null,
+	primary key (id)
+);
+
+create table authorities (
+    id bigserial,
+	username varchar(50) not null,
+	authority varchar(50) not null,
+	primary key (id)
 );

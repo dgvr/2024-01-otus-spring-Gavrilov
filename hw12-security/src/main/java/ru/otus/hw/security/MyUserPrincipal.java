@@ -2,21 +2,26 @@ package ru.otus.hw.security;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import ru.otus.hw.models.Authority;
 import ru.otus.hw.models.User;
 
 import java.util.Collection;
+import java.util.List;
 
 public class MyUserPrincipal implements UserDetails {
 
     private final User user;
 
-    public MyUserPrincipal(User user) {
+    private final List<Authority> authorities;
+
+    public MyUserPrincipal(User user, List<Authority> authorities) {
         this.user = user;
+        this.authorities = authorities;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return authorities;
     }
 
     @Override
@@ -46,6 +51,6 @@ public class MyUserPrincipal implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return user.getEnabled();
     }
 }
