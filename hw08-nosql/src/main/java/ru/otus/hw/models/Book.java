@@ -24,8 +24,4 @@ public class Book {
     private Author author;
 
     private List<Genre> genres;
-
-//    @Fetch(FetchMode.SUBSELECT)
-//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "book")
-//    private List<Comment> comments;
 }
