@@ -23,6 +23,10 @@ insert into users(username, password, enabled)
 values ('us', '$2a$12$Eztu3Nl7UHEWf.ELwxCopee6VM3zWLCwN18Cf3SDJ8xURIr4WWOam', true),
        ('admin', '$2a$12$Eztu3Nl7UHEWf.ELwxCopee6VM3zWLCwN18Cf3SDJ8xURIr4WWOam', true);
 
-insert into authorities(username, authority)
-values('us', 'USER_ROLE'),
-      ('admin', 'ADMIN_ROLE');
+ insert into authorities(authority)
+ values('ROLE_USER'),
+       ('ROLE_ADMIN');
+
+
+insert into users_authorities(user_id, authority_id)
+values (1, 1),  (2, 2);

@@ -40,7 +40,12 @@ create table users(
 
 create table authorities (
     id bigserial,
-	username varchar(50) not null,
 	authority varchar(50) not null,
 	primary key (id)
 );
+
+create table users_authorities (
+        user_id bigint references users(id) on delete cascade,
+        authority_id bigint references authorities(id) on delete cascade,
+        primary key (user_id, authority_id)
+)

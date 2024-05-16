@@ -22,7 +22,5 @@ public class Authority implements GrantedAuthority {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String username;
-
     private String authority;
 }

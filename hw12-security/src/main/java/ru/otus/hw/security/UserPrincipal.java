@@ -2,26 +2,21 @@ package ru.otus.hw.security;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import ru.otus.hw.models.Authority;
-import ru.otus.hw.models.User;
+import ru.otus.hw.dto.UserDto;
 
 import java.util.Collection;
-import java.util.List;
 
-public class MyUserPrincipal implements UserDetails {
+public class UserPrincipal implements UserDetails {
 
-    private final User user;
+    private final UserDto user;
 
-    private final List<Authority> authorities;
-
-    public MyUserPrincipal(User user, List<Authority> authorities) {
+    public UserPrincipal(UserDto user) {
         this.user = user;
-        this.authorities = authorities;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+        return user.getAuthorities();
     }
 
     @Override
