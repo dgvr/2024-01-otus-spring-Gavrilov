@@ -3,7 +3,6 @@ package ru.otus.hw.controller;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.platform.commons.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -22,6 +21,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(BookController.class)
@@ -43,11 +43,16 @@ class BookControllerSecurityTest {
     @ParameterizedTest
     @MethodSource("testArguments")
     void testRight(String userName, String role, ResultMatcher matcher, MockHttpServletRequestBuilder builder) throws Exception {
-        if (StringUtils.isNotBlank(userName)) {
-            builder.with(user(userName).roles(role));
-        }
-        mvc.perform(builder)
+        mvc.perform(builder.with(user(userName).roles(role)))
                 .andExpect(matcher);
+    }
+
+    @ParameterizedTest
+    @MethodSource("testArgumentsNoAuthorized")
+    void testRightNoAuthorized(MockHttpServletRequestBuilder builder) throws Exception {
+        mvc.perform(builder)
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrlPattern("**/login"));
     }
 
     static Stream<? extends Arguments> testArguments() {
@@ -67,24 +72,12 @@ class BookControllerSecurityTest {
 
                 ),
                 Arguments.of(
-                        "",
-                        "",
-                        status().isFound(),
-                        get("/")
+                        "user",
+                        "USER",
+                        status().isOk(),
+                        get("/book/edit/title/{id}", 1)
+                ),
 
-                ),
-                Arguments.of(
-                        "user",
-                        "USER",
-                        status().isOk(),
-                        get("/book/edit/title/{id}", 1)
-                ),
-                Arguments.of(
-                        "",
-                        "",
-                        status().isFound(),
-                        get("/book/edit/title/{id}", 1)
-                ),
                 Arguments.of(
                         "user",
                         "USER",
@@ -92,13 +85,7 @@ class BookControllerSecurityTest {
                         get("/book/edit/author")
                                 .param("bookId", "1")
                 ),
-                Arguments.of(
-                        "",
-                        "",
-                        status().isFound(),
-                        get("/book/edit/author")
-                                .param("bookId", "1")
-                ),
+
                 Arguments.of(
                         "user",
                         "USER",
@@ -106,25 +93,14 @@ class BookControllerSecurityTest {
                         get("/book/edit/genre")
                                 .param("bookId", "1")
                 ),
-                Arguments.of(
-                        "",
-                        "",
-                        status().isFound(),
-                        get("/book/edit/genre")
-                                .param("bookId", "1")
-                ),
+
                 Arguments.of(
                         "user",
                         "USER",
                         status().isOk(),
                         get("/book/about/{id}", 1)
                 ),
-                Arguments.of(
-                        "",
-                        "",
-                        status().isFound(),
-                        get("/book/about/{id}", 1)
-                ),
+
                 Arguments.of(
                         "admin",
                         "ADMIN",
@@ -137,12 +113,7 @@ class BookControllerSecurityTest {
                         status().isForbidden(),
                         get("/book/create")
                 ),
-                Arguments.of(
-                        "",
-                        "",
-                        status().isFound(),
-                        get("/book/create")
-                ),
+
                 Arguments.of(
                         "user",
                         "USER",
@@ -157,6 +128,57 @@ class BookControllerSecurityTest {
                         status().isForbidden(),
                         post("/book/edit/all/{id}", 1).param("action", "delete")
                                 .with(csrf())
+                )
+        );
+    }
+
+
+    static Stream<? extends Arguments> testArgumentsNoAuthorized() {
+        return Stream.of(
+                Arguments.of(
+                        post("/book/edit/title/{id}", 1)
+                                .param("title", "titleBook")
+                                .with(csrf())
+                ),
+                Arguments.of(
+                        post("/book/edit/author")
+                                .param("authorId", "1").param("bookId", "1")
+                                .with(csrf())
+                ),
+                Arguments.of(
+                        post("/book/edit/genre")
+                                .param("bookId", "1").param("genreIds", "1", "2", "3")
+                                .with(csrf())
+                ),
+                Arguments.of(
+                        post("/book/create")
+                                .param("title", "bookTitle").param("authorId", "1").param("genreIds", "1", "2", "3")
+                                .with(csrf())
+                ),
+                Arguments.of(
+                        post("/book/edit/all/{id}", 1).param("action", "delete")
+                                .with(csrf())
+                ),
+                Arguments.of(
+                        get("/")
+
+                ),
+                Arguments.of(
+                        get("/book/edit/title/{id}", 1)
+                ),
+                Arguments.of(
+                        get("/book/edit/author")
+                                .param("bookId", "1")
+                ),
+                Arguments.of(
+                        get("/book/edit/genre")
+                                .param("bookId", "1")
+                ),
+                Arguments.of(
+                        get("/book/about/{id}", 1)
+                ),
+                Arguments.of(
+                        get("/book/create")
                 )
         );
     }
