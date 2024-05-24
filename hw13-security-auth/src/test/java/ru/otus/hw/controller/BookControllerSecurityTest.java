@@ -110,7 +110,7 @@ class BookControllerSecurityTest {
                 Arguments.of(
                         "user",
                         "USER",
-                        status().isForbidden(),
+                        status().isOk(),
                         get("/book/create")
                 ),
 

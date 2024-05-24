@@ -3,6 +3,7 @@ package ru.otus.hw.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -25,11 +26,14 @@ public class SecurityConfiguration {
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/book/create").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/book/create").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/book/edit/all/*").hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated()
                 )
-                .formLogin(Customizer.withDefaults());
+                .formLogin(Customizer.withDefaults())
+                .rememberMe(rm ->
+                        rm.tokenValiditySeconds(60 * 60 * 60)
+                                .key("mySecretKey"));
         return http.build();
     }
 

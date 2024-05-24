@@ -19,7 +19,7 @@ public class CommentRepositoryTest {
     private TestEntityManager entityManager;
 
     @Autowired
-    CommentRepository commentRepository;
+    private CommentRepository commentRepository;
 
     //@Test
     @ParameterizedTest
