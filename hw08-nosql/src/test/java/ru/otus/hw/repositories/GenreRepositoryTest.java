@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import ru.otus.hw.models.Genre;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public class GenreRepositoryTest {
     private GenreRepository genreRepository;
 
     @Autowired
-    private MongoOperations mongoOperations;
+    private MongoTemplate mongoOperations;
 
     @Test
     public void findByIdInTest() {

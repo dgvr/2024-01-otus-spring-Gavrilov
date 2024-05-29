@@ -13,7 +13,7 @@ values (1, 1),   (1, 2),
        (2, 3),   (2, 4),
        (3, 5),   (3, 6);
 
-insert into comments(s_text, book_id)
-values ('Comment1', 1), ('Comment2', 1),
-       ('Comment3', 2), ('Comment4', 2),
-       ('Comment5', 3), ('Comment6', 3)
+--insert into comments(s_text, book_id)
+--values ('Comment1', 1), ('Comment2', 1),
+--       ('Comment3', 2), ('Comment4', 2),
+--       ('Comment5', 3), ('Comment6', 3)
