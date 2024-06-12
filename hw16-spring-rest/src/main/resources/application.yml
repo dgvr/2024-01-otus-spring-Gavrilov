@@ -19,7 +19,15 @@ management:
   endpoints:
     web:
       exposure:
-        include: "*"
+        include: health, logfile, metrics
   endpoint:
     health:
       show-details: always
+    logfile:
+      enabled: true
+
+logging:
+  level:
+    ROOT: INFO
+  file:
+    name: "hw16-log"
