@@ -1,0 +1,33 @@
+spring:
+  data:
+    rest:
+      basePath: /dataRest
+  datasource:
+    url: jdbc:h2:mem:maindb
+  sql:
+    init:
+      mode: always
+
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+
+    show-sql: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, logfile, metrics
+  endpoint:
+    health:
+      show-details: always
+    logfile:
+      enabled: true
+
+logging:
+  level:
+    ROOT: INFO
+  file:
+    name: "hw16-log"
