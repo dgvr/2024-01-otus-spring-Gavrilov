@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Error info</title>
+</head>
+<body>
+
+<form id="edit-book-title-form">
+    <div class="row">
+        <label for="book-title-input">Error:</label>
+        <input id="book-title-input" type="text" readonly="readonly" value="Title1" th:value="${errMessage}"/>
+    </div>
+
+    <div class="row">
+        <a href="bookList.html" th:href="@{/}">
+            <button type="button">Cancel</button>
+        </a>
+    </div>
+</form>
+</body>
+</html>

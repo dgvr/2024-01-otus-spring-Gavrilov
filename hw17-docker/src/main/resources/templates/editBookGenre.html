@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Genre</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<form id="edit-book-genre-form" action="editBookGenre.html" th:method="post" th:action="@{/book/{id}/edit/genre(id=${bookId})}">
+    <div class="row">
+        <ul>
+            <li th:each="item : ${genres}">
+                <input type="checkbox" name="genreIds" th:value="${item.id}" th:text="${item.name}"/>
+                <!--TODO подумать как сделать выбранными актуальные жанры  th:checked="${item.id == 2}"-->
+            </li>
+        </ul>
+    </div>
+
+    <div class="row">
+        <button type="submit">Save</button>
+        <a href="bookAbout.html" th:href="@{/book/about/{bookId}(bookId=${bookId})}">
+            <button type="button">Cancel</button>
+        </a>
+    </div>
+</form>
+</body>
+</html>
